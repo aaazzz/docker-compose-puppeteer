@@ -1,0 +1,17 @@
+version: '3.5'
+services:
+  puppeeteer:
+    container_name: puppeeteer
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    tty: true
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
