@@ -1,35 +1,17 @@
 const puppeteer = require("puppeteer");
+const { getViewPortOption, launchOptions } = require("../utils/helpers")
 
-const getDeviceWidth = (device) => {
-  switch(device) {
-    case "sp":
-      return 360;
-    case "tablet":
-      return 768;
-    case "desktop":
-      return 1024;
-
-    return 0
-  }
-}
-
-const captureHeatmap = async (req) => {
+const captureHeatmap = async (device, req) => {
   const url = req.query.url;
-  const deviceWidth = getDeviceWidth(req.query.device);
-  if (!deviceWidth) {
+  const viewPortOption = getViewPortOption(device);
+  if (!viewPortOption) {
     throw new Error("Unknown device parameter.");
   }
 
-  const browser = await puppeteer.launch({
-    executablePath: '/usr/bin/google-chrome-stable',
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
-    ]
-  });
+  const browser = await puppeteer.launch(launchOptions());
 
   const page = await browser.newPage();
-  await page.setViewport({ width: deviceWidth, height: 800 })
+  await page.setViewport(viewPortOption)
   await page.goto(url)
 
   const base64Image = await page.screenshot({
