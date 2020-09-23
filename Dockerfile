@@ -17,6 +17,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 WORKDIR /app
 COPY . .
 
+RUN yarn install
 RUN yarn
 EXPOSE 3000
 
